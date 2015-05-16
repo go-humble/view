@@ -22,12 +22,12 @@ func AppendToEl(parent dom.Element, child View) {
 	parent.AppendChild(child.Element())
 }
 
-func Replace(old View, new View) {
-	old.Element().ParentElement().ReplaceChild(old.Element(), new.Element())
+func Replace(new View, old View) {
+	old.Element().ParentElement().ReplaceChild(new.Element(), old.Element())
 }
 
-func ReplaceEl(old dom.Element, new View) {
-	old.ParentElement().ReplaceChild(old, new.Element())
+func ReplaceEl(new View, old dom.Element) {
+	old.ParentElement().ReplaceChild(new.Element(), old)
 }
 
 func Remove(v View) {
@@ -49,11 +49,11 @@ func Hide(v View) {
 	case oldStyles[len(oldStyles)] == ';':
 		// There was a style attribute and it ended in a semicolon,
 		// We can safely append the new styles to the old.
-		newStyles += "display:none;"
+		newStyles = oldStyles + "display:none;"
 	default:
 		// There was a style attribute and it didn't end in a semicolon,
 		// in this case we should add our own semicolon.
-		newStyles += ";display:none;"
+		newStyles = oldStyles + ";display:none;"
 	}
 	v.Element().SetAttribute("style", newStyles)
 }
