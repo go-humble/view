@@ -2724,7 +2724,109 @@ $packages["unicode"] = (function() {
 	return $pkg;
 })();
 $packages["unicode/utf8"] = (function() {
-	var $pkg = {}, $init;
+	var $pkg = {}, $init, decodeRuneInStringInternal, DecodeRuneInString, RuneCountInString;
+	decodeRuneInStringInternal = function(s) {
+		var $ptr, _tmp, _tmp$1, _tmp$10, _tmp$11, _tmp$12, _tmp$13, _tmp$14, _tmp$15, _tmp$16, _tmp$17, _tmp$18, _tmp$19, _tmp$2, _tmp$20, _tmp$21, _tmp$22, _tmp$23, _tmp$24, _tmp$25, _tmp$26, _tmp$27, _tmp$28, _tmp$29, _tmp$3, _tmp$30, _tmp$31, _tmp$32, _tmp$33, _tmp$34, _tmp$35, _tmp$36, _tmp$37, _tmp$38, _tmp$39, _tmp$4, _tmp$40, _tmp$41, _tmp$42, _tmp$43, _tmp$44, _tmp$45, _tmp$46, _tmp$47, _tmp$48, _tmp$49, _tmp$5, _tmp$50, _tmp$6, _tmp$7, _tmp$8, _tmp$9, c0, c1, c2, c3, n, r, s, short$1, size;
+		r = 0;
+		size = 0;
+		short$1 = false;
+		n = s.length;
+		if (n < 1) {
+			_tmp = 65533; _tmp$1 = 0; _tmp$2 = true; r = _tmp; size = _tmp$1; short$1 = _tmp$2;
+			return [r, size, short$1];
+		}
+		c0 = s.charCodeAt(0);
+		if (c0 < 128) {
+			_tmp$3 = (c0 >> 0); _tmp$4 = 1; _tmp$5 = false; r = _tmp$3; size = _tmp$4; short$1 = _tmp$5;
+			return [r, size, short$1];
+		}
+		if (c0 < 192) {
+			_tmp$6 = 65533; _tmp$7 = 1; _tmp$8 = false; r = _tmp$6; size = _tmp$7; short$1 = _tmp$8;
+			return [r, size, short$1];
+		}
+		if (n < 2) {
+			_tmp$9 = 65533; _tmp$10 = 1; _tmp$11 = true; r = _tmp$9; size = _tmp$10; short$1 = _tmp$11;
+			return [r, size, short$1];
+		}
+		c1 = s.charCodeAt(1);
+		if (c1 < 128 || 192 <= c1) {
+			_tmp$12 = 65533; _tmp$13 = 1; _tmp$14 = false; r = _tmp$12; size = _tmp$13; short$1 = _tmp$14;
+			return [r, size, short$1];
+		}
+		if (c0 < 224) {
+			r = ((((c0 & 31) >>> 0) >> 0) << 6 >> 0) | (((c1 & 63) >>> 0) >> 0);
+			if (r <= 127) {
+				_tmp$15 = 65533; _tmp$16 = 1; _tmp$17 = false; r = _tmp$15; size = _tmp$16; short$1 = _tmp$17;
+				return [r, size, short$1];
+			}
+			_tmp$18 = r; _tmp$19 = 2; _tmp$20 = false; r = _tmp$18; size = _tmp$19; short$1 = _tmp$20;
+			return [r, size, short$1];
+		}
+		if (n < 3) {
+			_tmp$21 = 65533; _tmp$22 = 1; _tmp$23 = true; r = _tmp$21; size = _tmp$22; short$1 = _tmp$23;
+			return [r, size, short$1];
+		}
+		c2 = s.charCodeAt(2);
+		if (c2 < 128 || 192 <= c2) {
+			_tmp$24 = 65533; _tmp$25 = 1; _tmp$26 = false; r = _tmp$24; size = _tmp$25; short$1 = _tmp$26;
+			return [r, size, short$1];
+		}
+		if (c0 < 240) {
+			r = (((((c0 & 15) >>> 0) >> 0) << 12 >> 0) | ((((c1 & 63) >>> 0) >> 0) << 6 >> 0)) | (((c2 & 63) >>> 0) >> 0);
+			if (r <= 2047) {
+				_tmp$27 = 65533; _tmp$28 = 1; _tmp$29 = false; r = _tmp$27; size = _tmp$28; short$1 = _tmp$29;
+				return [r, size, short$1];
+			}
+			if (55296 <= r && r <= 57343) {
+				_tmp$30 = 65533; _tmp$31 = 1; _tmp$32 = false; r = _tmp$30; size = _tmp$31; short$1 = _tmp$32;
+				return [r, size, short$1];
+			}
+			_tmp$33 = r; _tmp$34 = 3; _tmp$35 = false; r = _tmp$33; size = _tmp$34; short$1 = _tmp$35;
+			return [r, size, short$1];
+		}
+		if (n < 4) {
+			_tmp$36 = 65533; _tmp$37 = 1; _tmp$38 = true; r = _tmp$36; size = _tmp$37; short$1 = _tmp$38;
+			return [r, size, short$1];
+		}
+		c3 = s.charCodeAt(3);
+		if (c3 < 128 || 192 <= c3) {
+			_tmp$39 = 65533; _tmp$40 = 1; _tmp$41 = false; r = _tmp$39; size = _tmp$40; short$1 = _tmp$41;
+			return [r, size, short$1];
+		}
+		if (c0 < 248) {
+			r = ((((((c0 & 7) >>> 0) >> 0) << 18 >> 0) | ((((c1 & 63) >>> 0) >> 0) << 12 >> 0)) | ((((c2 & 63) >>> 0) >> 0) << 6 >> 0)) | (((c3 & 63) >>> 0) >> 0);
+			if (r <= 65535 || 1114111 < r) {
+				_tmp$42 = 65533; _tmp$43 = 1; _tmp$44 = false; r = _tmp$42; size = _tmp$43; short$1 = _tmp$44;
+				return [r, size, short$1];
+			}
+			_tmp$45 = r; _tmp$46 = 4; _tmp$47 = false; r = _tmp$45; size = _tmp$46; short$1 = _tmp$47;
+			return [r, size, short$1];
+		}
+		_tmp$48 = 65533; _tmp$49 = 1; _tmp$50 = false; r = _tmp$48; size = _tmp$49; short$1 = _tmp$50;
+		return [r, size, short$1];
+	};
+	DecodeRuneInString = function(s) {
+		var $ptr, _tuple, r, s, size;
+		r = 0;
+		size = 0;
+		_tuple = decodeRuneInStringInternal(s); r = _tuple[0]; size = _tuple[1];
+		return [r, size];
+	};
+	$pkg.DecodeRuneInString = DecodeRuneInString;
+	RuneCountInString = function(s) {
+		var $ptr, _i, _ref, _rune, n, s;
+		n = 0;
+		_ref = s;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.length)) { break; }
+			_rune = $decodeRune(_ref, _i);
+			n = n + (1) >> 0;
+			_i += _rune[1];
+		}
+		return n;
+	};
+	$pkg.RuneCountInString = RuneCountInString;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -2734,7 +2836,7 @@ $packages["unicode/utf8"] = (function() {
 	return $pkg;
 })();
 $packages["strings"] = (function() {
-	var $pkg = {}, $init, errors, js, io, unicode, utf8, sliceType, IndexByte, Join;
+	var $pkg = {}, $init, errors, js, io, unicode, utf8, sliceType, IndexByte, hashStr, Count, Contains, Index, Join, Replace;
 	errors = $packages["errors"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	io = $packages["io"];
@@ -2746,6 +2848,124 @@ $packages["strings"] = (function() {
 		return $parseInt(s.indexOf($global.String.fromCharCode(c))) >> 0;
 	};
 	$pkg.IndexByte = IndexByte;
+	hashStr = function(sep) {
+		var $ptr, _tmp, _tmp$1, hash, i, i$1, pow, sep, sq, x, x$1;
+		hash = 0;
+		i = 0;
+		while (true) {
+			if (!(i < sep.length)) { break; }
+			hash = ((((hash >>> 16 << 16) * 16777619 >>> 0) + (hash << 16 >>> 16) * 16777619) >>> 0) + (sep.charCodeAt(i) >>> 0) >>> 0;
+			i = i + (1) >> 0;
+		}
+		_tmp = 1; _tmp$1 = 16777619; pow = _tmp; sq = _tmp$1;
+		i$1 = sep.length;
+		while (true) {
+			if (!(i$1 > 0)) { break; }
+			if (!(((i$1 & 1) === 0))) {
+				pow = (x = sq, (((pow >>> 16 << 16) * x >>> 0) + (pow << 16 >>> 16) * x) >>> 0);
+			}
+			sq = (x$1 = sq, (((sq >>> 16 << 16) * x$1 >>> 0) + (sq << 16 >>> 16) * x$1) >>> 0);
+			i$1 = (i$1 >> $min((1), 31)) >> 0;
+		}
+		return [hash, pow];
+	};
+	Count = function(s, sep) {
+		var $ptr, _tuple, c, h, hashsep, i, i$1, i$2, lastmatch, n, pow, s, sep, x, x$1;
+		n = 0;
+		if (sep.length === 0) {
+			return utf8.RuneCountInString(s) + 1 >> 0;
+		} else if (sep.length === 1) {
+			c = sep.charCodeAt(0);
+			i = 0;
+			while (true) {
+				if (!(i < s.length)) { break; }
+				if (s.charCodeAt(i) === c) {
+					n = n + (1) >> 0;
+				}
+				i = i + (1) >> 0;
+			}
+			return n;
+		} else if (sep.length > s.length) {
+			return 0;
+		} else if (sep.length === s.length) {
+			if (sep === s) {
+				return 1;
+			}
+			return 0;
+		}
+		_tuple = hashStr(sep); hashsep = _tuple[0]; pow = _tuple[1];
+		h = 0;
+		i$1 = 0;
+		while (true) {
+			if (!(i$1 < sep.length)) { break; }
+			h = ((((h >>> 16 << 16) * 16777619 >>> 0) + (h << 16 >>> 16) * 16777619) >>> 0) + (s.charCodeAt(i$1) >>> 0) >>> 0;
+			i$1 = i$1 + (1) >> 0;
+		}
+		lastmatch = 0;
+		if ((h === hashsep) && s.substring(0, sep.length) === sep) {
+			n = n + (1) >> 0;
+			lastmatch = sep.length;
+		}
+		i$2 = sep.length;
+		while (true) {
+			if (!(i$2 < s.length)) { break; }
+			h = (x = 16777619, (((h >>> 16 << 16) * x >>> 0) + (h << 16 >>> 16) * x) >>> 0);
+			h = h + ((s.charCodeAt(i$2) >>> 0)) >>> 0;
+			h = h - ((x$1 = (s.charCodeAt((i$2 - sep.length >> 0)) >>> 0), (((pow >>> 16 << 16) * x$1 >>> 0) + (pow << 16 >>> 16) * x$1) >>> 0)) >>> 0;
+			i$2 = i$2 + (1) >> 0;
+			if ((h === hashsep) && lastmatch <= (i$2 - sep.length >> 0) && s.substring((i$2 - sep.length >> 0), i$2) === sep) {
+				n = n + (1) >> 0;
+				lastmatch = i$2;
+			}
+		}
+		return n;
+	};
+	$pkg.Count = Count;
+	Contains = function(s, substr) {
+		var $ptr, s, substr;
+		return Index(s, substr) >= 0;
+	};
+	$pkg.Contains = Contains;
+	Index = function(s, sep) {
+		var $ptr, _tuple, h, hashsep, i, i$1, n, pow, s, sep, x, x$1;
+		n = sep.length;
+		if (n === 0) {
+			return 0;
+		} else if (n === 1) {
+			return IndexByte(s, sep.charCodeAt(0));
+		} else if (n === s.length) {
+			if (sep === s) {
+				return 0;
+			}
+			return -1;
+		} else if (n > s.length) {
+			return -1;
+		}
+		_tuple = hashStr(sep); hashsep = _tuple[0]; pow = _tuple[1];
+		h = 0;
+		i = 0;
+		while (true) {
+			if (!(i < n)) { break; }
+			h = ((((h >>> 16 << 16) * 16777619 >>> 0) + (h << 16 >>> 16) * 16777619) >>> 0) + (s.charCodeAt(i) >>> 0) >>> 0;
+			i = i + (1) >> 0;
+		}
+		if ((h === hashsep) && s.substring(0, n) === sep) {
+			return 0;
+		}
+		i$1 = n;
+		while (true) {
+			if (!(i$1 < s.length)) { break; }
+			h = (x = 16777619, (((h >>> 16 << 16) * x >>> 0) + (h << 16 >>> 16) * x) >>> 0);
+			h = h + ((s.charCodeAt(i$1) >>> 0)) >>> 0;
+			h = h - ((x$1 = (s.charCodeAt((i$1 - n >> 0)) >>> 0), (((pow >>> 16 << 16) * x$1 >>> 0) + (pow << 16 >>> 16) * x$1) >>> 0)) >>> 0;
+			i$1 = i$1 + (1) >> 0;
+			if ((h === hashsep) && s.substring((i$1 - n >> 0), i$1) === sep) {
+				return i$1 - n >> 0;
+			}
+		}
+		return -1;
+	};
+	$pkg.Index = Index;
 	Join = function(a, sep) {
 		var $ptr, _i, _ref, a, b, bp, i, n, s, sep;
 		if (a.$length === 0) {
@@ -2775,6 +2995,41 @@ $packages["strings"] = (function() {
 		return $bytesToString(b);
 	};
 	$pkg.Join = Join;
+	Replace = function(s, old, new$1, n) {
+		var $ptr, _tuple, i, j, m, n, new$1, old, s, start, t, w, wid;
+		if (old === new$1 || (n === 0)) {
+			return s;
+		}
+		m = Count(s, old);
+		if (m === 0) {
+			return s;
+		} else if (n < 0 || m < n) {
+			n = m;
+		}
+		t = $makeSlice(sliceType, (s.length + (n * ((new$1.length - old.length >> 0)) >> 0) >> 0));
+		w = 0;
+		start = 0;
+		i = 0;
+		while (true) {
+			if (!(i < n)) { break; }
+			j = start;
+			if (old.length === 0) {
+				if (i > 0) {
+					_tuple = utf8.DecodeRuneInString(s.substring(start)); wid = _tuple[1];
+					j = j + (wid) >> 0;
+				}
+			} else {
+				j = j + (Index(s.substring(start), old)) >> 0;
+			}
+			w = w + ($copyString($subslice(t, w), s.substring(start, j))) >> 0;
+			w = w + ($copyString($subslice(t, w), new$1)) >> 0;
+			start = j + old.length >> 0;
+			i = i + (1) >> 0;
+		}
+		w = w + ($copyString($subslice(t, w), s.substring(start))) >> 0;
+		return $bytesToString($subslice(t, 0, w));
+	};
+	$pkg.Replace = Replace;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -9964,7 +10219,7 @@ $packages["honnef.co/go/js/dom"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/go-humble/view"] = (function() {
-	var $pkg = {}, $init, dom, strings, DefaultView, ptrType, document, _r, Append;
+	var $pkg = {}, $init, dom, strings, DefaultView, ptrType, document, _r, Append, AppendToEl, Replace, ReplaceEl, Remove, Hide, Show;
 	dom = $packages["honnef.co/go/js/dom"];
 	strings = $packages["strings"];
 	DefaultView = $pkg.DefaultView = $newType(0, $kindStruct, "view.DefaultView", "DefaultView", "github.com/go-humble/view", function(el_) {
@@ -10005,6 +10260,80 @@ $packages["github.com/go-humble/view"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Append }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.child = child; $f.parent = parent; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Append = Append;
+	AppendToEl = function(parent, child) {
+		var $ptr, _r$1, child, parent, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; child = $f.child; parent = $f.parent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r$1 = child.Element(); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		$r = parent.AppendChild(_r$1); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: AppendToEl }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f.child = child; $f.parent = parent; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.AppendToEl = AppendToEl;
+	Replace = function(new$1, old) {
+		var $ptr, _arg, _arg$1, _r$1, _r$2, _r$3, _r$4, new$1, old, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; new$1 = $f.new$1; old = $f.old; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r$1 = old.Element(); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = _r$1.ParentElement(); /* */ $s = 2; case 2: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$3 = new$1.Element(); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg = _r$3;
+		_r$4 = old.Element(); /* */ $s = 4; case 4: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_arg$1 = _r$4;
+		$r = _r$2.ReplaceChild(_arg, _arg$1); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Replace }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.new$1 = new$1; $f.old = old; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Replace = Replace;
+	ReplaceEl = function(new$1, old) {
+		var $ptr, _r$1, _r$2, new$1, old, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; _r$2 = $f._r$2; new$1 = $f.new$1; old = $f.old; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r$1 = old.ParentElement(); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = new$1.Element(); /* */ $s = 2; case 2: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		$r = _r$1.ReplaceChild(_r$2, old); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ReplaceEl }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.new$1 = new$1; $f.old = old; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ReplaceEl = ReplaceEl;
+	Remove = function(v) {
+		var $ptr, _r$1, _r$2, _r$3, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r$1 = v.Element(); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = _r$1.ParentElement(); /* */ $s = 2; case 2: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$3 = v.Element(); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		$r = _r$2.RemoveChild(_r$3); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Remove }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Remove = Remove;
+	Hide = function(v) {
+		var $ptr, _r$1, _r$2, _r$3, newStyles, oldStyles, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; newStyles = $f.newStyles; oldStyles = $f.oldStyles; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r$1 = v.Element(); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = _r$1.GetAttribute("style"); /* */ $s = 2; case 2: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		oldStyles = _r$2;
+		newStyles = "";
+		if (oldStyles === "") {
+			newStyles = "display:none";
+		} else if (strings.Contains(oldStyles, "display:none")) {
+			return;
+		} else if (oldStyles.charCodeAt(oldStyles.length) === 59) {
+			newStyles = oldStyles + "display:none;";
+		} else {
+			newStyles = oldStyles + ";display:none;";
+		}
+		_r$3 = v.Element(); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		$r = _r$3.SetAttribute("style", newStyles); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Hide }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.newStyles = newStyles; $f.oldStyles = oldStyles; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Hide = Hide;
+	Show = function(v) {
+		var $ptr, _r$1, _r$2, _r$3, newStyles, oldStyles, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; newStyles = $f.newStyles; oldStyles = $f.oldStyles; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r$1 = v.Element(); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = _r$1.GetAttribute("style"); /* */ $s = 2; case 2: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		oldStyles = _r$2;
+		newStyles = strings.Replace(oldStyles, "display:none;", "", 1);
+		newStyles = strings.Replace(newStyles, "display:none", "", 1);
+		_r$3 = v.Element(); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		$r = _r$3.SetAttribute("style", newStyles); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Show }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.newStyles = newStyles; $f.oldStyles = oldStyles; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Show = Show;
 	ptrType.methods = [{prop: "Element", name: "Element", pkg: "", typ: $funcType([], [dom.Element], false)}, {prop: "SetElement", name: "SetElement", pkg: "", typ: $funcType([dom.Element], [], false)}];
 	DefaultView.init([{prop: "el", name: "el", pkg: "github.com/go-humble/view", typ: dom.Element, tag: ""}]);
 	$init = function() {
@@ -10132,16 +10461,18 @@ $packages["github.com/rusco/qunit"] = (function() {
 	return $pkg;
 })();
 $packages["main"] = (function() {
-	var $pkg = {}, $init, view, qunit, dom, TestView, NoOpView, ptrType, ptrType$1, document, body, container, _r, _r$1, init, main, reset;
+	var $pkg = {}, $init, view, qunit, dom, ContentView, NoOpView, ptrType, ptrType$1, document, body, container, _r, _r$1, init, main, reset;
 	view = $packages["github.com/go-humble/view"];
 	qunit = $packages["github.com/rusco/qunit"];
 	dom = $packages["honnef.co/go/js/dom"];
-	TestView = $pkg.TestView = $newType(0, $kindStruct, "main.TestView", "TestView", "main", function(DefaultView_) {
+	ContentView = $pkg.ContentView = $newType(0, $kindStruct, "main.ContentView", "ContentView", "main", function(content_, DefaultView_) {
 		this.$val = this;
 		if (arguments.length === 0) {
+			this.content = "";
 			this.DefaultView = new view.DefaultView.ptr();
 			return;
 		}
+		this.content = content_;
 		this.DefaultView = DefaultView_;
 	});
 	NoOpView = $pkg.NoOpView = $newType(0, $kindStruct, "main.NoOpView", "NoOpView", "main", function(DefaultView_) {
@@ -10152,7 +10483,7 @@ $packages["main"] = (function() {
 		}
 		this.DefaultView = DefaultView_;
 	});
-	ptrType = $ptrType(TestView);
+	ptrType = $ptrType(ContentView);
 	ptrType$1 = $ptrType(NoOpView);
 	init = function() {
 		var $ptr, _r$2, $s, $r;
@@ -10163,16 +10494,16 @@ $packages["main"] = (function() {
 		$r = body.AppendChild(container); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: init }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	TestView.ptr.prototype.Render = function() {
+	ContentView.ptr.prototype.Render = function() {
 		var $ptr, _r$2, v, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		v = this;
 		_r$2 = v.DefaultView.Element(); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		$r = _r$2.SetInnerHTML("foo"); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = _r$2.SetInnerHTML(v.content); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return $ifaceNil;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TestView.ptr.prototype.Render }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ContentView.ptr.prototype.Render }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	TestView.prototype.Render = function() { return this.$val.Render(); };
+	ContentView.prototype.Render = function() { return this.$val.Render(); };
 	NoOpView.ptr.prototype.Render = function() {
 		var $ptr, v;
 		v = this;
@@ -10190,16 +10521,133 @@ $packages["main"] = (function() {
 			list = _r$2;
 			$r = container.AppendChild(list); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			outer.DefaultView.SetElement(list);
-			inner = new TestView.ptr(new view.DefaultView.ptr());
+			inner = new ContentView.ptr("foo", new view.DefaultView.ptr());
 			_r$3 = document.CreateElement("li"); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 			$r = inner.DefaultView.SetElement(_r$3); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = view.Append(outer, inner); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			_r$4 = inner.Render(); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4 = inner.Render(); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 			_r$4;
+			$r = view.Append(outer, inner); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_r$5 = container.InnerHTML(); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 			_r$6 = assert.Equal(new $String(_r$5), new $String("<ul><li>foo</li></ul>"), "inner view was not appended to outer view"); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 			_r$6;
 			/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f.assert = assert; $f.inner = inner; $f.list = list; $f.outer = outer; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+		}));
+		qunit.Test("AppendToEl", (function $b(assert) {
+			var $ptr, _r$2, _r$3, _r$4, _r$5, _r$6, assert, inner, list, $s, $deferred, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; assert = $f.assert; inner = $f.inner; list = $f.list; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+			$deferred.push([reset, []]);
+			_r$2 = document.CreateElement("ul"); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			list = _r$2;
+			$r = container.AppendChild(list); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			inner = new ContentView.ptr("foo", new view.DefaultView.ptr());
+			_r$3 = document.CreateElement("li"); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			$r = inner.DefaultView.SetElement(_r$3); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$4 = inner.Render(); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4;
+			$r = view.AppendToEl(list, inner); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$5 = container.InnerHTML(); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$6 = assert.Equal(new $String(_r$5), new $String("<ul><li>foo</li></ul>"), "inner view was not appended to outer view"); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+			_r$6;
+			/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f.assert = assert; $f.inner = inner; $f.list = list; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+		}));
+		qunit.Test("Replace", (function $b(assert) {
+			var $ptr, _r$2, _r$3, _r$4, _r$5, assert, barView, fooView, $s, $deferred, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; assert = $f.assert; barView = $f.barView; fooView = $f.fooView; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+			$deferred.push([reset, []]);
+			fooView = new ContentView.ptr("foo", new view.DefaultView.ptr());
+			_r$2 = fooView.Render(); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$r = view.AppendToEl(container, fooView); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			barView = new ContentView.ptr("bar", new view.DefaultView.ptr());
+			_r$3 = barView.Render(); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+			$r = view.Replace(barView, fooView); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$4 = container.InnerHTML(); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$5 = assert.Equal(new $String(_r$4), new $String("<div>bar</div>"), "inner view was not appended to outer view"); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$5;
+			/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.assert = assert; $f.barView = barView; $f.fooView = fooView; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+		}));
+		qunit.Test("ReplaceEl", (function $b(assert) {
+			var $ptr, _r$2, _r$3, _r$4, _r$5, assert, barView, fooEl, $s, $deferred, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; assert = $f.assert; barView = $f.barView; fooEl = $f.fooEl; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+			$deferred.push([reset, []]);
+			_r$2 = document.CreateElement("div"); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			fooEl = _r$2;
+			$r = fooEl.SetInnerHTML("foo"); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = container.AppendChild(fooEl); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			barView = new ContentView.ptr("bar", new view.DefaultView.ptr());
+			_r$3 = barView.Render(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+			$r = view.ReplaceEl(barView, fooEl); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$4 = container.InnerHTML(); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$5 = assert.Equal(new $String(_r$4), new $String("<div>bar</div>"), "inner view was not appended to outer view"); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$5;
+			/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.assert = assert; $f.barView = barView; $f.fooEl = fooEl; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+		}));
+		qunit.Test("Remove", (function $b(assert) {
+			var $ptr, _r$2, _r$3, _r$4, assert, removeMe, $s, $deferred, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; assert = $f.assert; removeMe = $f.removeMe; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+			$deferred.push([reset, []]);
+			removeMe = new ContentView.ptr("removeMe", new view.DefaultView.ptr());
+			_r$2 = removeMe.Render(); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$r = view.AppendToEl(container, removeMe); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = view.Remove(removeMe); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$3 = container.InnerHTML(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$4 = assert.Equal(new $String(_r$3), new $String(""), "inner view was not appended to outer view"); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4;
+			/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.assert = assert; $f.removeMe = removeMe; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+		}));
+		qunit.Test("Hide", (function $b(assert) {
+			var $ptr, _r$10, _r$11, _r$12, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, assert, hideMe, $s, $deferred, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; assert = $f.assert; hideMe = $f.hideMe; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+			$deferred.push([reset, []]);
+			hideMe = new ContentView.ptr("hideMe", new view.DefaultView.ptr());
+			$r = view.AppendToEl(container, hideMe); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$2 = hideMe.DefaultView.Element(); /* */ $s = 2; case 2: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			$r = _r$2.SetAttribute("data-power-level", "9001"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$3 = hideMe.DefaultView.Element(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			$r = _r$3.SetAttribute("style", "color:#ff0000"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = view.Hide(hideMe); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$4 = hideMe.DefaultView.Element(); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$5 = _r$4.HasAttribute("data-power-level"); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$6 = assert.Ok(new $Bool(_r$5), "data-power-level attribute was removed"); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+			_r$6;
+			_r$7 = hideMe.DefaultView.Element(); /* */ $s = 10; case 10: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+			_r$8 = _r$7.HasAttribute("style"); /* */ $s = 11; case 11: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+			_r$9 = assert.Ok(new $Bool(_r$8), "style attribute was removed"); /* */ $s = 12; case 12: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+			_r$9;
+			_r$10 = hideMe.DefaultView.Element(); /* */ $s = 13; case 13: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+			_r$11 = _r$10.GetAttribute("style"); /* */ $s = 14; case 14: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+			_r$12 = assert.Equal(new $String(_r$11), new $String("color:#ff0000;display:none;"), "attributes were not set correctly"); /* */ $s = 15; case 15: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+			_r$12;
+			/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.assert = assert; $f.hideMe = hideMe; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+		}));
+		qunit.Test("Show", (function $b(assert) {
+			var $ptr, _r$10, _r$11, _r$12, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, assert, showMe, $s, $deferred, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; assert = $f.assert; showMe = $f.showMe; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+			$deferred.push([reset, []]);
+			showMe = new ContentView.ptr("showMe", new view.DefaultView.ptr());
+			$r = view.AppendToEl(container, showMe); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$2 = showMe.DefaultView.Element(); /* */ $s = 2; case 2: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			$r = _r$2.SetAttribute("data-answer-to-everything", "42"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$3 = showMe.DefaultView.Element(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			$r = _r$3.SetAttribute("style", "color:#ff0000"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = view.Hide(showMe); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = view.Show(showMe); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$4 = showMe.DefaultView.Element(); /* */ $s = 8; case 8: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$5 = _r$4.HasAttribute("data-answer-to-everything"); /* */ $s = 9; case 9: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$6 = assert.Ok(new $Bool(_r$5), "data-answer-to-everything attribute was removed. Maybe it will appear again in  7.5 million years?"); /* */ $s = 10; case 10: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+			_r$6;
+			_r$7 = showMe.DefaultView.Element(); /* */ $s = 11; case 11: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+			_r$8 = _r$7.HasAttribute("style"); /* */ $s = 12; case 12: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+			_r$9 = assert.Ok(new $Bool(_r$8), "style attribute was removed"); /* */ $s = 13; case 13: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+			_r$9;
+			_r$10 = showMe.DefaultView.Element(); /* */ $s = 14; case 14: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+			_r$11 = _r$10.GetAttribute("style"); /* */ $s = 15; case 15: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+			_r$12 = assert.Equal(new $String(_r$11), new $String("color:#ff0000;"), "attributes were not set correctly"); /* */ $s = 16; case 16: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+			_r$12;
+			/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.assert = assert; $f.showMe = showMe; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
 		}));
 	};
 	reset = function() {
@@ -10210,7 +10658,7 @@ $packages["main"] = (function() {
 	};
 	ptrType.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [$error], false)}];
 	ptrType$1.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [$error], false)}];
-	TestView.init([{prop: "DefaultView", name: "", pkg: "", typ: view.DefaultView, tag: ""}]);
+	ContentView.init([{prop: "content", name: "content", pkg: "main", typ: $String, tag: ""}, {prop: "DefaultView", name: "", pkg: "", typ: view.DefaultView, tag: ""}]);
 	NoOpView.init([{prop: "DefaultView", name: "", pkg: "", typ: view.DefaultView, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
