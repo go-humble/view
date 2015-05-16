@@ -4,7 +4,7 @@
 // Replace, Remove, etc.). Router works great as a stand-alone package or in combintation
 // with other packages in the Humble Framework (https://github.com/go-humble/humble).
 //
-// Version X.X.X (develop)
+// Version 0.1.0
 //
 // For the full source code, a getting started guide, and more information visit
 // https://github.com/go-humble/view.
