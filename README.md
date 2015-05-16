@@ -6,6 +6,8 @@ Version X.X.X (develop)
 A small library for organizing view-related code written in pure go which compiles to
 javascript via [gopherjs](github.com/gopherjs/gopherjs). View includes a View interface
 and some helper functions for operating on views (e.g. Append, Replace, Remove, etc.).
+View works great as a stand-alone package or in combintation with other packages in the
+[Humble Framework](github.com/go-humble/humble).
 
 View is written in pure go. It feels like go, follows go idioms when possible, and
 compiles with the go tools. But it is meant to be compiled to javascript and run
