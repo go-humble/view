@@ -3,17 +3,18 @@ Humble/View
 
 [![GoDoc](https://godoc.org/github.com/go-humble/view?status.svg)](https://godoc.org/github.com/go-humble/view)
 
-Version 0.1.0
+Version 0.2.0
 
-A small library for organizing view-related code written in pure go which compiles to
-javascript via [gopherjs](https://github.com/gopherjs/gopherjs). View includes a View interface
-and some helper functions for operating on views (e.g. Append, Replace, Remove, etc.).
-View works great as a stand-alone package or in combintation with other packages in the
-[Humble Framework](https://github.com/go-humble/humble).
+A small library for organizing view-related code written in pure go which
+compiles to javascript via [gopherjs](https://github.com/gopherjs/gopherjs).
+View includes a View interface and some helper functions for operating on views
+(e.g. Append, Replace, Remove, AddEventListener, etc.). View works great as a
+stand-alone package or in combination with other
+[Humble](https://github.com/go-humble) packages.
 
-View is written in pure go. It feels like go, follows go idioms when possible, and
-compiles with the go tools. But it is meant to be compiled to javascript and run
-in the browser.
+View is written in pure go. It feels like go, follows go idioms when possible,
+and compiles with the go tools. But it is meant to be compiled to javascript and
+run in the browser.
 
 
 Browser Support
@@ -35,7 +36,7 @@ Installation
 Install view like you would any other go package:
 
 ```bash
-go get github.com/go-humble/view`
+go get github.com/go-humble/view
 ```
 
 You will also need to install gopherjs if you don't already have it. The latest version is
@@ -91,8 +92,8 @@ func (v *DefaultView) SetElement(el dom.Element) {
 ```
 
 If you are using an embedded `DefaultView`, you will often need to work with a
-pointer to your `View` type (e.g. *TodoView instead of TodoView). This is becuase
-the `Element` method of `DefaultView` requires a pointer receiver.
+pointer to your `View` type (e.g. `*TodoView` instead of `TodoView`). This is
+because the `Element` method of `DefaultView` requires a pointer receiver.
 
 ### Defining the Render Method
 
@@ -104,7 +105,7 @@ type TodoView struct {
 	title       string
 	isCompleted bool
 	view.DefaultView
-} 
+}
 
 func (todo TodoView) Render() {
 	todo.Element().SetInnerHTML(`"<div class="todo-item" <span class="title"></span>`)
@@ -154,7 +155,7 @@ browsers themselves. Typically you install a karma launcher with `npm install -g
 You can edit the config file at `karma/test-mac.conf.js` or create a new one (e.g. `karma/test-windows.conf.js`)
 if you want to change the browsers that are tested on.
 
-Once you have installed all the dependencies, start karma with `karma start karma/test-mac.conf.js` (or 
+Once you have installed all the dependencies, start karma with `karma start karma/test-mac.conf.js` (or
 your customized config file, if applicable). Once karma is running, you can keep it running in between tests.
 
 Next you need to compile the test.go file to javascript so it can run in the browsers:

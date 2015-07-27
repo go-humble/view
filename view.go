@@ -6,8 +6,9 @@
 package view
 
 import (
-	"honnef.co/go/js/dom"
 	"strings"
+
+	"honnef.co/go/js/dom"
 )
 
 var (
@@ -83,9 +84,9 @@ func Hide(v View) {
 	v.Element().SetAttribute("style", newStyles)
 }
 
-// Show shows a previously hidden view by removing the inline style "display:none".
-// Show is safe to use even if you have other attributes and inline styles. It
-// has no effect if the view is already visible.
+// Show shows a previously hidden view by removing the inline style
+// "display:none". Show is safe to use even if you have other attributes and
+// inline styles. It has no effect if the view is already visible.
 func Show(v View) {
 	oldStyles := v.Element().GetAttribute("style")
 	// Try removing the with a semicolon version first.
