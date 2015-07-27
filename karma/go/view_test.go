@@ -6,6 +6,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/go-humble/view"
 	"github.com/rusco/qunit"
 	"honnef.co/go/js/dom"
@@ -147,6 +149,68 @@ func main() {
 		assert.Ok(showMe.Element().HasAttribute("data-answer-to-everything"), "data-answer-to-everything attribute was removed. Maybe it will appear again in  7.5 million years?")
 		assert.Ok(showMe.Element().HasAttribute("style"), "style attribute was removed")
 		assert.Equal(showMe.Element().GetAttribute("style"), `color:#ff0000;`, "attributes were not set correctly")
+	})
+
+	qunit.Test("AddEventListener", func(assert qunit.QUnitAssert) {
+		defer reset()
+		qunit.Expect(2)
+		done := assert.Async()
+		go func() {
+			content := &ContentView{
+				content: `<a href="#">Click me</a>`,
+			}
+			view.AppendToEl(container, content)
+			assert.Equal(content.Render(), nil, "Render error")
+			click := make(chan bool)
+			view.AddEventListener(content, "click", "a", func(ev dom.Event) {
+				ev.PreventDefault()
+				go func() {
+					click <- true
+				}()
+			})
+			go func() {
+				select {
+				case <-click:
+					assert.Ok(true, "")
+				case <-time.After(1 * time.Second):
+					assert.Ok(false, "Failed to receive click event after 1 second.")
+				}
+				done()
+			}()
+			content.Element().QuerySelector("a").Underlying().Call("click")
+		}()
+	})
+
+	qunit.Test("EventListener.Remove", func(assert qunit.QUnitAssert) {
+		defer reset()
+		qunit.Expect(2)
+		done := assert.Async()
+		go func() {
+			content := &ContentView{
+				content: `<a href="#">Click me</a>`,
+			}
+			view.AppendToEl(container, content)
+			assert.Equal(content.Render(), nil, "Render error")
+			click := make(chan bool)
+			listener := view.AddEventListener(content, "click", "a", func(ev dom.Event) {
+				ev.PreventDefault()
+				go func() {
+					click <- true
+				}()
+			})
+			listener.Remove()
+			go func() {
+				select {
+				case <-click:
+					assert.Ok(false,
+						"Click event was triggered but it should have been removed")
+				case <-time.After(1 * time.Second):
+					assert.Ok(true, "")
+				}
+				done()
+			}()
+			content.Element().QuerySelector("a").Underlying().Call("click")
+		}()
 	})
 }
 
