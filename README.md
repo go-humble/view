@@ -3,7 +3,7 @@ Humble/View
 
 [![GoDoc](https://godoc.org/github.com/go-humble/view?status.svg)](https://godoc.org/github.com/go-humble/view)
 
-Version X.X.X (develop)
+Version 0.2.0
 
 A small library for organizing view-related code written in pure go which
 compiles to javascript via [gopherjs](https://github.com/gopherjs/gopherjs).
