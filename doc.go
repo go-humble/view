@@ -5,7 +5,7 @@
 // stand-alone package or in combination with other Humble packages
 // (https://github.com/go-humble).
 //
-// Version X.X.X (develop)
+// Version 0.3.0
 //
 // For the full source code, a getting started guide, and more information visit
 // https://github.com/go-humble/view.
