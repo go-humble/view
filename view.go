@@ -30,11 +30,24 @@ func Append(parent View, child View) {
 	parent.Element().AppendChild(child.Element())
 }
 
-// Append appends child to a parent element. More specifically, it
+// AppendToEl appends child to a parent element. More specifically, it
 // appends child.Element() to parent using the appendChild method
 // from the DOM API.
 func AppendToEl(parent dom.Element, child View) {
 	parent.AppendChild(child.Element())
+}
+
+// InsertBefore inserts v directly before before. More specifically, it
+// inserts v.Element() before before.Element() using the insertBefore
+// method from the DOM API.
+func InsertBefore(v View, before View) {
+	before.Element().ParentNode().InsertBefore(v.Element(), before.Element())
+}
+
+// InsertBeforeEl inserts v directly before before. More specifically, it
+// inserts v.Element() using the insertBefore method from the DOM API.
+func InsertBeforeEl(v View, before dom.Element) {
+	before.ParentNode().InsertBefore(v.Element(), before)
 }
 
 // Replace replaces an old View with new. More specifically, it replaces
